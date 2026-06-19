@@ -13,28 +13,28 @@
 
 :root {
   /* Primary palette */
-  --color-primary:        #e07a9c;  /* Rose pink - main brand color */
-  --color-primary-dark:   #c45d82;  /* Darker rose - hover states */
-  --color-primary-light:  #f5d8e3;  /* Light rose - backgrounds, accents */
+  --color-primary:        #2DBEFF;  /* Sky blue - main brand color */
+  --color-primary-dark:   #0099dd;  /* Deep blue - hover states */
+  --color-primary-light:  #d7f2ff;  /* Ice blue - backgrounds, accents */
 
   /* Secondary palette */
-  --color-secondary:      #c89b7b;  /* Warm tan/caramel */
-  --color-secondary-dark: #a67b5b;
+  --color-secondary:      #9EF769;  /* Lime green */
+  --color-secondary-dark: #6ddb38;
 
   /* Neutrals */
   --color-white:          #ffffff;
-  --color-off-white:      #fef9f6;  /* Warm white - page background */
-  --color-cream:          #fdf3eb;  /* Cream - section backgrounds */
-  --color-gray-100:       #f7f3f0;
-  --color-gray-200:       #e8e0da;
-  --color-gray-300:       #ccc0b7;
-  --color-gray-500:       #8c7e74;
-  --color-gray-700:       #5c5046;
-  --color-gray-900:       #2d2520;  /* Near-black - body text */
+  --color-off-white:      #f6fbfe;  /* Cool white - page background */
+  --color-cream:          #edf7fb;  /* Pale ice - section backgrounds */
+  --color-gray-100:       #e6f0f5;
+  --color-gray-200:       #cce0e8;
+  --color-gray-300:       #a3c4d1;
+  --color-gray-500:       #5a8a9a;
+  --color-gray-700:       #1a5a6a;
+  --color-gray-900:       #054752;  /* Deep teal - body text */
 
   /* Utility */
-  --color-success:        #6aab73;
-  --color-border:         #e8e0da;
+  --color-success:        #9EF769;
+  --color-border:         #cce0e8;
 
   /* 👉 CHANGE FONTS HERE */
   --font-heading:  'Georgia', 'Times New Roman', serif;
@@ -323,7 +323,7 @@ a:hover {
   width: 700px;
   height: 700px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(224, 122, 156, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(45, 190, 255, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
