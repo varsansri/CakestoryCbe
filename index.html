@@ -21,8 +21,6 @@
   -->
 
   <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="liquid-glass/styles.css">
-  <link rel="stylesheet" href="liquid-glass/glass.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <style>
     :root {
@@ -761,70 +759,5 @@
        SCRIPTS
        ============================================================ -->
   <script src="js/main.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="liquid-glass/container.js"></script>
-  <script src="liquid-glass/button.js"></script>
-  <script>
-    // Initialize Liquid Glass effects after DOM loads
-    document.addEventListener('DOMContentLoaded', function () {
-
-      // 1. Hero CTA buttons -> glass pills
-      const heroActions = document.querySelector('.hero__actions');
-      if (heroActions) {
-        const glassExploreBtn = new Button({
-          text: 'Explore Courses',
-          size: 18,
-          type: 'pill',
-          tintOpacity: 0.35,
-          onClick: () => { window.location.href = '#courses'; }
-        });
-        glassExploreBtn.element.style.marginRight = '12px';
-
-        const glassTourBtn = new Button({
-          text: 'Book a Tour',
-          size: 18,
-          type: 'pill',
-          tintOpacity: 0.25,
-          onClick: () => { window.location.href = '#contact'; }
-        });
-
-        heroActions.innerHTML = '';
-        heroActions.appendChild(glassExploreBtn.element);
-        heroActions.appendChild(glassTourBtn.element);
-      }
-
-      // 2. CTA banner button -> glass pill
-      const ctaBanner = document.querySelector('.cta-banner');
-      if (ctaBanner) {
-        const oldBtn = ctaBanner.querySelector('.btn');
-        if (oldBtn) {
-          const glassCtaBtn = new Button({
-            text: 'Get Started Free',
-            size: 20,
-            type: 'pill',
-            tintOpacity: 0.4,
-            onClick: () => { window.location.href = '#contact'; }
-          });
-          oldBtn.replaceWith(glassCtaBtn.element);
-        }
-      }
-
-      // 3. Contact form -> glass container
-      const contactForm = document.querySelector('.contact__form');
-      if (contactForm) {
-        const glassForm = new Container({
-          borderRadius: 24,
-          type: 'rounded',
-          tintOpacity: 0.15
-        });
-        glassForm.element.style.padding = '40px';
-        glassForm.element.style.width = '100%';
-        contactForm.parentNode.insertBefore(glassForm.element, contactForm);
-        glassForm.element.appendChild(contactForm);
-        contactForm.style.background = 'transparent';
-        contactForm.style.boxShadow = 'none';
-      }
-    });
-  </script>
 </body>
 </html>
