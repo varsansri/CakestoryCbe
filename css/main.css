@@ -517,7 +517,28 @@ a:hover { color: var(--color-primary); }
 
 @media (max-width:768px) {
   .section { padding:60px 0; }
-  .nav__links {
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav__brand-text {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.nav__brand-text span {
+  color: var(--color-gray-900);
+  font-weight: 400;
+}
+
+.nav__links {
     position:fixed; top:var(--nav-height); left:0; right:0;
     background:var(--color-white); flex-direction:column; gap:0;
     padding:20px 0; box-shadow:var(--shadow-md);
