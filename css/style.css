@@ -434,8 +434,10 @@ a:hover {
 
 /* Nav logo image */
 .nav__logo-img {
-  height: 44px;
-  width: auto;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  object-fit: cover;
   display: block;
 }
 
