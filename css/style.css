@@ -424,9 +424,19 @@ a:hover {
 }
 
 /* Hero specific */
-.hero .img-placeholder {
-  aspect-ratio: 4 / 3;
+.hero .hero__img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
+  object-fit: cover;
+}
+
+/* Nav logo image */
+.nav__logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
 }
 
 /* ============================================================
@@ -991,6 +1001,13 @@ a:hover {
 
 .footer__brand-name span {
   color: var(--color-primary);
+}
+
+.footer__logo-img {
+  height: 40px;
+  width: auto;
+  display: block;
+  filter: brightness(10);
 }
 
 .footer__brand-desc {
