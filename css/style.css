@@ -13,28 +13,28 @@
 
 :root {
   /* Primary palette */
-  --color-primary:        #2DBEFF;  /* Sky blue - main brand color */
-  --color-primary-dark:   #0099dd;  /* Deep blue - hover states */
-  --color-primary-light:  #d7f2ff;  /* Ice blue - backgrounds, accents */
+  --color-primary:        #FFAEC9;  /* Baby pink - main brand */
+  --color-primary-dark:   #FF85B3;  /* Deep pink - hover */
+  --color-primary-light:  #FFE4EE;  /* Blush - backgrounds */
 
   /* Secondary palette */
-  --color-secondary:      #9EF769;  /* Lime green */
-  --color-secondary-dark: #6ddb38;
+  --color-secondary:      #8DD47C;  /* Fresh green */
+  --color-secondary-dark: #6AB85A;
 
   /* Neutrals */
   --color-white:          #ffffff;
-  --color-off-white:      #f6fbfe;  /* Cool white - page background */
-  --color-cream:          #edf7fb;  /* Pale ice - section backgrounds */
-  --color-gray-100:       #e6f0f5;
-  --color-gray-200:       #cce0e8;
-  --color-gray-300:       #a3c4d1;
-  --color-gray-500:       #5a8a9a;
-  --color-gray-700:       #1a5a6a;
-  --color-gray-900:       #054752;  /* Deep teal - body text */
+  --color-off-white:      #fff8fa;  /* Pink-tinted white */
+  --color-cream:          #fff0f4;  /* Soft blush */
+  --color-gray-100:       #fce8ef;
+  --color-gray-200:       #f2cfda;
+  --color-gray-300:       #d4aaba;
+  --color-gray-500:       #a87d8e;
+  --color-gray-700:       #5c4050;
+  --color-gray-900:       #2d1a22;  /* Deep plum - text */
 
   /* Utility */
-  --color-success:        #9EF769;
-  --color-border:         #cce0e8;
+  --color-success:        #8DD47C;
+  --color-border:         #f2cfda;
 
   /* 👉 CHANGE FONTS HERE */
   --font-heading:  'Georgia', 'Times New Roman', serif;
@@ -323,7 +323,7 @@ a:hover {
   width: 700px;
   height: 700px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(45, 190, 255, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 174, 201, 0.12) 0%, transparent 70%);
   pointer-events: none;
 }
 
