@@ -807,11 +807,20 @@ document.addEventListener('DOMContentLoaded', function() {
     function deepMerge(target, source) {
       var output = JSON.parse(JSON.stringify(target));
       Object.keys(source).forEach(function(key) {
-        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) &&
-            output[key] && typeof output[key] === 'object' && !Array.isArray(output[key])) {
-          output[key] = deepMerge(output[key], source[key]);
-        } else {
-          output[key] = source[key];
+        var sv = source[key];
+        if (Array.isArray(sv)) {
+          output[key] = output[key] || [];
+          sv.forEach(function(item, i) {
+            if (item && typeof item === 'object' && !Array.isArray(item) && output[key][i] && typeof output[key][i] === 'object') {
+              output[key][i] = deepMerge(output[key][i], item);
+            } else if (item !== undefined && item !== null) {
+              output[key][i] = item;
+            }
+          });
+        } else if (sv && typeof sv === 'object' && !Array.isArray(sv) && output[key] && typeof output[key] === 'object') {
+          output[key] = deepMerge(output[key], sv);
+        } else if (sv !== undefined) {
+          output[key] = sv;
         }
       });
       return output;

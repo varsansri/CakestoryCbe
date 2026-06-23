@@ -159,14 +159,24 @@ function loadData() {
 }
 
 function deepMerge(target, source) {
-  const output = JSON.parse(JSON.stringify(target));
-  for (const key of Object.keys(source)) {
-    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) && output[key] && typeof output[key] === 'object' && !Array.isArray(output[key])) {
-      output[key] = deepMerge(output[key], source[key]);
-    } else {
-      output[key] = source[key];
+  var output = JSON.parse(JSON.stringify(target));
+  Object.keys(source).forEach(function(key) {
+    var sv = source[key];
+    if (Array.isArray(sv)) {
+      output[key] = output[key] || [];
+      sv.forEach(function(item, i) {
+        if (item && typeof item === 'object' && !Array.isArray(item) && output[key][i] && typeof output[key][i] === 'object') {
+          output[key][i] = deepMerge(output[key][i], item);
+        } else if (item !== undefined && item !== null) {
+          output[key][i] = item;
+        }
+      });
+    } else if (sv && typeof sv === 'object' && !Array.isArray(sv) && output[key] && typeof output[key] === 'object') {
+      output[key] = deepMerge(output[key], sv);
+    } else if (sv !== undefined) {
+      output[key] = sv;
     }
-  }
+  });
   return output;
 }
 
@@ -204,6 +214,7 @@ document.getElementById('tabs').addEventListener('click', function(e) {
   if (e.target.classList.contains('tab')) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     e.target.classList.add('active');
+    readFormData(activeTab);
     activeTab = e.target.dataset.tab;
     renderTab(activeTab);
     window.scrollTo(0, 0);
@@ -259,61 +270,63 @@ function collectDiff(current, defaults, output) {
 }
 
 function readFormData(tab) {
+  var el;
   if (tab === 'hero') {
-    data.hero.title = document.getElementById('f_hero_title').value;
-    data.hero.badge = document.getElementById('f_hero_badge').value;
-    data.hero.description = document.getElementById('f_hero_desc').value;
-    data.hero.image = document.getElementById('f_hero_image').value;
-    data.about.title = document.getElementById('f_about_title').value;
-    data.about.body = document.getElementById('f_about_body').value;
-    data.about.body2 = document.getElementById('f_about_body2').value;
-    data.about.image = document.getElementById('f_about_image').value;
-    data.about.stat1 = document.getElementById('f_stat1').value;
-    data.about.stat1Label = document.getElementById('f_stat1l').value;
-    data.about.stat2 = document.getElementById('f_stat2').value;
-    data.about.stat2Label = document.getElementById('f_stat2l').value;
-    data.about.stat3 = document.getElementById('f_stat3').value;
-    data.about.stat3Label = document.getElementById('f_stat3l').value;
+    el = document.getElementById('f_hero_title'); if (el) data.hero.title = el.value;
+    el = document.getElementById('f_hero_badge'); if (el) data.hero.badge = el.value;
+    el = document.getElementById('f_hero_desc'); if (el) data.hero.description = el.value;
+    el = document.getElementById('f_hero_image'); if (el) data.hero.image = el.value;
+    el = document.getElementById('f_about_title'); if (el) data.about.title = el.value;
+    el = document.getElementById('f_about_body'); if (el) data.about.body = el.value;
+    el = document.getElementById('f_about_body2'); if (el) data.about.body2 = el.value;
+    el = document.getElementById('f_about_image'); if (el) data.about.image = el.value;
+    el = document.getElementById('f_stat1'); if (el) data.about.stat1 = el.value;
+    el = document.getElementById('f_stat1l'); if (el) data.about.stat1Label = el.value;
+    el = document.getElementById('f_stat2'); if (el) data.about.stat2 = el.value;
+    el = document.getElementById('f_stat2l'); if (el) data.about.stat2Label = el.value;
+    el = document.getElementById('f_stat3'); if (el) data.about.stat3 = el.value;
+    el = document.getElementById('f_stat3l'); if (el) data.about.stat3Label = el.value;
   } else if (tab === 'courses') {
-    data.courses.forEach((c, i) => {
-      c.name = document.getElementById('fc_name' + i).value;
-      c.level = document.getElementById('fc_level' + i).value;
-      c.description = document.getElementById('fc_desc' + i).value;
-      c.price = document.getElementById('fc_price' + i).value;
-      c.duration = document.getElementById('fc_dur' + i).value;
-      c.sessions = document.getElementById('fc_sess' + i).value;
-      c.image = document.getElementById('fc_img' + i).value;
+    data.courses.forEach(function(c, i) {
+      el = document.getElementById('fc_name' + i); if (el) c.name = el.value;
+      el = document.getElementById('fc_level' + i); if (el) c.level = el.value;
+      el = document.getElementById('fc_desc' + i); if (el) c.description = el.value;
+      el = document.getElementById('fc_price' + i); if (el) c.price = el.value;
+      el = document.getElementById('fc_dur' + i); if (el) c.duration = el.value;
+      el = document.getElementById('fc_sess' + i); if (el) c.sessions = el.value;
+      el = document.getElementById('fc_img' + i); if (el) c.image = el.value;
     });
   } else if (tab === 'gallery') {
-    data.gallery.forEach((g, i) => {
-      data.gallery[i] = document.getElementById('fg_img' + i).value;
+    data.gallery.forEach(function(g, i) {
+      el = document.getElementById('fg_img' + i);
+      if (el) data.gallery[i] = el.value;
     });
   } else if (tab === 'pricing') {
-    data.pricing.forEach((p, i) => {
-      p.name = document.getElementById('fp_name' + i).value;
-      p.price = document.getElementById('fp_price' + i).value;
-      p.period = document.getElementById('fp_period' + i).value;
-      const featEls = document.querySelectorAll('[data-pricing=' + i + '] .feature-row input');
-      p.features = Array.from(featEls).map(el => el.value).filter(v => v.trim());
+    data.pricing.forEach(function(p, i) {
+      el = document.getElementById('fp_name' + i); if (el) p.name = el.value;
+      el = document.getElementById('fp_price' + i); if (el) p.price = el.value;
+      el = document.getElementById('fp_period' + i); if (el) p.period = el.value;
+      var featEls = document.querySelectorAll('[data-pricing="' + i + '"] .feature-row input');
+      p.features = Array.from(featEls).map(function(el) { return el.value; }).filter(function(v) { return v.trim(); });
     });
   } else if (tab === 'instructors') {
-    data.instructors.forEach((ins, i) => {
-      ins.name = document.getElementById('fi_name' + i).value;
-      ins.role = document.getElementById('fi_role' + i).value;
-      ins.bio = document.getElementById('fi_bio' + i).value;
-      ins.image = document.getElementById('fi_img' + i).value;
+    data.instructors.forEach(function(ins, i) {
+      el = document.getElementById('fi_name' + i); if (el) ins.name = el.value;
+      el = document.getElementById('fi_role' + i); if (el) ins.role = el.value;
+      el = document.getElementById('fi_bio' + i); if (el) ins.bio = el.value;
+      el = document.getElementById('fi_img' + i); if (el) ins.image = el.value;
     });
   } else if (tab === 'contact') {
-    data.contact.address = document.getElementById('fc_addr').value;
-    data.contact.phone = document.getElementById('fc_phone').value;
-    data.contact.email = document.getElementById('fc_email').value;
-    data.contact.hours = document.getElementById('fc_hours').value;
+    el = document.getElementById('fc_addr'); if (el) data.contact.address = el.value;
+    el = document.getElementById('fc_phone'); if (el) data.contact.phone = el.value;
+    el = document.getElementById('fc_email'); if (el) data.contact.email = el.value;
+    el = document.getElementById('fc_hours'); if (el) data.contact.hours = el.value;
   }
 }
 
 function renderTab(tab) {
-  readFormData(activeTab);
   const c = document.getElementById('tabContent');
+  if (!c) return;
   switch(tab) {
     case 'hero': c.innerHTML = renderHero(); break;
     case 'courses': c.innerHTML = renderCourses(); break;
