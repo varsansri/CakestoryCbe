@@ -771,21 +771,21 @@ document.addEventListener('DOMContentLoaded', function() {
       hero: {
         brand: 'CakeStory - Cbe',
         badge: 'Award-Winning Cake School',
-        title: 'Master the <em>Art</em> of Cake Crafting',
-        description: 'From buttercream basics to advanced sugar flowers &#8212; learn from industry professionals in our state-of-the-art teaching studio. Your journey to becoming a cake artist starts here.',
+        title: 'Master the Art of Cake Crafting',
+        description: 'From buttercream basics to advanced sugar flowers — learn from industry professionals in our state-of-the-art teaching studio. Your journey to becoming a cake artist starts here.',
         image: 'images/hero-bg.jpg'
       },
       about: {
         title: 'Where Passion Meets Profession',
-        body: 'Founded in 2018, <strong>CakestoryCbe Studio</strong> has trained over 1,200 students in the fine art of cake decoration. Whether you\'re a complete beginner or a seasoned baker looking to refine your skills, our hands-on curriculum meets you where you are.',
-        body2: 'We believe cake decorating is equal parts science and creativity. Our instructors bring decades of combined industry experience &#8212; from Michelin-starred pastry kitchens to winning international competitions. Every class is limited to <strong>8 students</strong> so you get the attention you deserve.',
+        body: 'Founded in 2018, CakestoryCbe Studio has trained over 1,200 students in the fine art of cake decoration. Whether you\'re a complete beginner or a seasoned baker looking to refine your skills, our hands-on curriculum meets you where you are.',
+        body2: 'We believe cake decorating is equal parts science and creativity. Our instructors bring decades of combined industry experience — from Michelin-starred pastry kitchens to winning international competitions. Every class is limited to 8 students so you get the attention you deserve.',
         image: 'images/about.png',
         stat1: '1,200+', stat1Label: 'Students Trained',
         stat2: '50+', stat2Label: 'Course Modules',
         stat3: '98%', stat3Label: 'Satisfaction Rate'
       },
       courses: [
-        {name:'Cake Foundations',level:'Beginner',description:'Master the essentials &#8212; sponge baking, buttercream smoothing, piping basics, and simple fondant work. No experience needed.',price:'$450',duration:'6 Weeks',sessions:'12 Sessions',image:''},
+        {name:'Cake Foundations',level:'Beginner',description:'Master the essentials — sponge baking, buttercream smoothing, piping basics, and simple fondant work. No experience needed.',price:'$450',duration:'6 Weeks',sessions:'12 Sessions',image:''},
         {name:'Artistic Cake Design',level:'Intermediate',description:'Dive into advanced piping, sugar flowers, hand-painting, tiered construction, and modern drip-cake techniques.',price:'$750',duration:'8 Weeks',sessions:'16 Sessions',image:''},
         {name:'Professional Masterclass',level:'Advanced',description:'Wedding cakes, sculpted cakes, sugar artistry, and business skills for launching your own cake studio.',price:'$1,200',duration:'12 Weeks',sessions:'24 Sessions',image:''}
       ],
@@ -801,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {name:'Elena Rodriguez',role:'Wedding Cake Designer',bio:'Designed cakes for 300+ weddings. Specializes in multi-tier structures and delicate piping work.',image:''},
         {name:'Marcus Okonkwo',role:'Business & Branding Coach',bio:'Helps students turn their passion into a profitable cake business. Built his own bakery from the ground up.',image:''}
       ],
-      contact: {address:'742 Sweet Avenue, Suite 101<br>Portland, OR 97201',phone:'(503) 555-0147',email:'hello@cakestorycbe.com',hours:'Mon &ndash; Fri: 9:00 AM &ndash; 7:00 PM<br>Saturday: 10:00 AM &ndash; 4:00 PM<br>Sunday: Closed'}
+      contact: {address:'742 Sweet Avenue, Suite 101\nPortland, OR 97201',phone:'(503) 555-0147',email:'hello@cakestorycbe.com',hours:'Mon – Fri: 9:00 AM – 7:00 PM\nSaturday: 10:00 AM – 4:00 PM\nSunday: Closed'}
     };
 
     function deepMerge(target, source) {
@@ -830,9 +830,12 @@ document.addEventListener('DOMContentLoaded', function() {
     try { stored = localStorage.getItem('cakeStoryData'); } catch(e) { stored = null; }
     var data = stored ? deepMerge(defaults, JSON.parse(stored)) : defaults;
 
+    // Helper: convert newlines to <br>
+    function nl2br(s) { return s.replace(/\n/g, '<br>'); }
+
     // Hero
     var el = document.querySelector('.hero__title');
-    if (el) el.innerHTML = data.hero.title;
+    if (el) el.textContent = data.hero.title;
     el = document.querySelector('.hero__badge');
     if (el) el.textContent = data.hero.badge;
     el = document.querySelector('.hero__description');
@@ -844,8 +847,8 @@ document.addEventListener('DOMContentLoaded', function() {
     el = document.querySelector('#about .section-title');
     if (el) el.textContent = data.about.title;
     var ps = document.querySelectorAll('#about .about__content p');
-    if (ps[0]) ps[0].innerHTML = data.about.body;
-    if (ps[1]) ps[1].innerHTML = data.about.body2;
+    if (ps[0]) ps[0].textContent = data.about.body;
+    if (ps[1]) ps[1].textContent = data.about.body2;
     el = document.querySelector('.about__img');
     if (el && data.about.image) el.src = data.about.image;
     var nums = document.querySelectorAll('#about .stat__number');
@@ -918,10 +921,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Contact
     var cvs = document.querySelectorAll('#contact .contact__info-value');
-    if (cvs[0]) cvs[0].innerHTML = data.contact.address;
+    if (cvs[0]) cvs[0].innerHTML = nl2br(data.contact.address);
     if (cvs[1]) cvs[1].textContent = data.contact.phone;
     if (cvs[2]) cvs[2].textContent = data.contact.email;
-    if (cvs[3]) cvs[3].innerHTML = data.contact.hours;
+    if (cvs[3]) cvs[3].innerHTML = nl2br(data.contact.hours);
   } catch(e) {
     console.log('CMS data load skipped:', e.message);
   }
