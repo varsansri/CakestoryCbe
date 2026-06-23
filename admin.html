@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>CakeStory Admin</title>
+<style>
+:root{--pink:#FFAEC9;--pink-dark:#FF85B3;--pink-light:#FFE4EE;--green:#8DD47C;--white:#fff;--bg:#fff0f4;--text:#2d1a22;--text-light:#5c4050;--border:#f2cfda;--radius:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding-bottom:100px;-webkit-tap-highlight-color:transparent}
+input,textarea,select{font-size:16px}
+.lock{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.lock-card{background:var(--white);border-radius:var(--radius);padding:40px 24px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.08);width:100%;max-width:340px}
+.lock-card h1{font-size:22px;color:var(--pink-dark);margin-bottom:8px}
+.lock-card p{font-size:13px;color:var(--text-light);margin-bottom:24px}
+.lock-card input{width:100%;padding:14px;border:2px solid var(--border);border-radius:10px;text-align:center;font-size:18px;letter-spacing:4px;outline:none;transition:border .2s}
+.lock-card input:focus{border-color:var(--pink-dark)}
+.lock-card button{width:100%;padding:14px;margin-top:12px;background:var(--pink-dark);color:var(--white);border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
+.lock-err{color:#e74c3c;font-size:13px;margin-top:8px;display:none}
+.hidden{display:none!important}
+.header{position:sticky;top:0;z-index:100;background:var(--white);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.header h2{font-size:17px;color:var(--pink-dark)}
+.header button{background:var(--pink-dark);color:var(--white);border:none;padding:8px 18px;border-radius:20px;font-size:14px;font-weight:600;cursor:pointer}
+.tabs{display:flex;overflow-x:auto;gap:6px;padding:10px 16px;background:var(--white);border-bottom:1px solid var(--border);-webkit-overflow-scrolling:touch}
+.tab{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:500;white-space:nowrap;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-light);flex-shrink:0;transition:all .2s}
+.tab.active{background:var(--pink-dark);color:var(--white);border-color:var(--pink-dark)}
+.content{padding:16px}
+.card{background:var(--white);border-radius:var(--radius);padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.card-title{font-size:15px;font-weight:600;margin-bottom:14px;color:var(--pink-dark);display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';width:4px;height:18px;background:var(--pink-dark);border-radius:2px}
+label{display:block;font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:4px}
+label .required{color:#e74c3c;font-size:11px;font-weight:400;margin-left:4px}
+input[type="text"],input[type="url"],textarea,select{width:100%;padding:12px;border:2px solid var(--border);border-radius:10px;font-size:15px;color:var(--text);background:var(--white);outline:none;margin-bottom:12px;transition:border .2s;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:var(--pink-dark)}
+textarea{resize:vertical;min-height:80px}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23a87d8e'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.inline-group{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field-note{font-size:11px;color:var(--text-light);margin-top:-8px;margin-bottom:12px}
+.preview-thumb{width:100%;height:140px;object-fit:cover;border-radius:8px;margin-bottom:8px;background:var(--bg);border:1px dashed var(--border)}
+.no-preview{width:100%;height:140px;border-radius:8px;margin-bottom:8px;background:var(--bg);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:13px}
+.img-url-row{display:flex;gap:8px}
+.img-url-row input{flex:1;margin-bottom:0}
+.img-url-row button{padding:12px 16px;background:var(--pink-light);color:var(--pink-dark);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.feature-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.feature-row input{flex:1;margin-bottom:0}
+.feature-row button{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--white);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-light);flex-shrink:0}
+.feature-row button.del{color:#e74c3c}
+.add-btn{display:inline-block;padding:8px 16px;border:2px dashed var(--border);border-radius:10px;background:none;color:var(--pink-dark);font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;width:100%;text-align:center}
+.floating-save{position:fixed;bottom:20px;left:16px;right:16px;background:var(--pink-dark);color:var(--white);padding:16px;border-radius:14px;text-align:center;font-size:17px;font-weight:700;cursor:pointer;z-index:200;box-shadow:0 6px 24px rgba(255,133,179,0.4);border:none;transition:transform .2s,box-shadow .2s}
+.floating-save:active{transform:scale(0.97)}
+.floating-save.saved{background:var(--green);box-shadow:0 6px 24px rgba(141,212,124,0.4)}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#2d1a22;color:var(--white);padding:12px 24px;border-radius:20px;font-size:14px;font-weight:500;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.logout-btn{background:none;border:1px solid var(--border);color:var(--text-light);padding:6px 14px;border-radius:16px;font-size:13px;cursor:pointer}
+.file-upload-area{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;margin-bottom:12px;cursor:pointer;transition:border .2s}
+.file-upload-area:hover{border-color:var(--pink-dark)}
+.file-upload-area p{font-size:13px;color:var(--text-light)}
+.file-upload-area .icon{font-size:32px;margin-bottom:4px}
+.file-upload-area input{display:none}
+</style>
+</head>
+<body>
+<div class="lock" id="lockScreen">
+  <div class="lock-card">
+    <h1>CakeStory Admin</h1>
+    <p>Enter passcode to manage</p>
+    <input type="password" id="passcode" placeholder="Passcode" maxlength="20" autocomplete="off">
+    <button onclick="unlock()">Unlock</button>
+    <p class="lock-err" id="lockErr">Wrong passcode</p>
+  </div>
+</div>
+<div class="hidden" id="adminPanel">
+  <div class="header">
+    <h2>CakeStory CMS</h2>
+    <div style="display:flex;gap:8px">
+      <button class="logout-btn" onclick="lockScreen()">Lock</button>
+      <button onclick="saveAll()" id="topSaveBtn">Save</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="hero">Hero</div>
+    <div class="tab" data-tab="courses">Courses</div>
+    <div class="tab" data-tab="gallery">Gallery</div>
+    <div class="tab" data-tab="pricing">Pricing</div>
+    <div class="tab" data-tab="instructors">Instructors</div>
+    <div class="tab" data-tab="contact">Contact</div>
+  </div>
+  <div class="content" id="tabContent"></div>
+  <button class="floating-save" id="floatingSave" onclick="saveAll()">Save Changes</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const PASSCODE = 'cake2025';
+let data = null;
+let activeTab = 'hero';
+let imageCache = {};
+
+function loadDefaults() {
+  return {
+    hero: {
+      brand: 'CakeStory - Cbe',
+      badge: 'Award-Winning Cake School',
+      title: 'Master the <em>Art</em> of Cake Crafting',
+      description: 'From buttercream basics to advanced sugar flowers — learn from industry professionals in our state-of-the-art teaching studio. Your journey to becoming a cake artist starts here.',
+      image: 'images/hero-bg.jpg'
+    },
+    about: {
+      label: 'About Us',
+      title: 'Where Passion Meets Profession',
+      body: 'Founded in 2018, <strong>CakestoryCbe Studio</strong> has trained over 1,200 students in the fine art of cake decoration. Whether you\'re a complete beginner or a seasoned baker looking to refine your skills, our hands-on curriculum meets you where you are.',
+      body2: 'We believe cake decorating is equal parts science and creativity. Our instructors bring decades of combined industry experience — from Michelin-starred pastry kitchens to winning international competitions. Every class is limited to <strong>8 students</strong> so you get the attention you deserve.',
+      image: 'images/about.png',
+      stat1: '1,200+',
+      stat1Label: 'Students Trained',
+      stat2: '50+',
+      stat2Label: 'Course Modules',
+      stat3: '98%',
+      stat3Label: 'Satisfaction Rate'
+    },
+    courses: [
+      {name:'Cake Foundations',level:'Beginner',description:'Master the essentials — sponge baking, buttercream smoothing, piping basics, and simple fondant work. No experience needed.',price:'$450',duration:'6 Weeks',sessions:'12 Sessions',image:''},
+      {name:'Artistic Cake Design',level:'Intermediate',description:'Dive into advanced piping, sugar flowers, hand-painting, tiered construction, and modern drip-cake techniques.',price:'$750',duration:'8 Weeks',sessions:'16 Sessions',image:''},
+      {name:'Professional Masterclass',level:'Advanced',description:'Wedding cakes, sculpted cakes, sugar artistry, and business skills for launching your own cake studio.',price:'$1,200',duration:'12 Weeks',sessions:'24 Sessions',image:''}
+    ],
+    gallery: ['','','','','',''],
+    pricing: [
+      {name:'Starter',price:'$450',period:'6-week course',features:['Cake Foundations curriculum','12 hands-on sessions','All materials included','Take-home recipe book','Certificate of completion'],featured:false,icon:'🍰'},
+      {name:'Artisan',price:'$750',period:'8-week course',features:['Everything in Starter, plus:','Advanced piping & sugar flowers','Tiered cake construction','Hand-painting techniques','Professional tool kit included','Portfolio photoshoot session'],featured:true,icon:'⭐'},
+      {name:'Master',price:'$1,200',period:'12-week course',features:['Everything in Artisan, plus:','Wedding cake specialization','Sculpted & novelty cakes','Business launch coaching','Lifetime alumni community','Job placement assistance'],featured:false,icon:'🌟'}
+    ],
+    instructors: [
+      {name:'Sarah Mitchell',role:'Head Pastry Instructor',bio:'Former executive pastry chef at The Ritz. 15+ years of experience in fine pastry and cake artistry.',image:''},
+      {name:'David Chen',role:'Sugar Art Specialist',bio:'International sugar-craft competition winner. Known for his breathtaking hand-crafted sugar flowers.',image:''},
+      {name:'Elena Rodriguez',role:'Wedding Cake Designer',bio:'Designed cakes for 300+ weddings. Specializes in multi-tier structures and delicate piping work.',image:''},
+      {name:'Marcus Okonkwo',role:'Business & Branding Coach',bio:'Helps students turn their passion into a profitable cake business. Built his own bakery from the ground up.',image:''}
+    ],
+    contact: {address:'742 Sweet Avenue, Suite 101<br>Portland, OR 97201',phone:'(503) 555-0147',email:'hello@cakestorycbe.com',hours:'Mon – Fri: 9:00 AM – 7:00 PM<br>Saturday: 10:00 AM – 4:00 PM<br>Sunday: Closed'},
+    testimonials: [
+      {text:'I walked in not knowing how to hold a piping bag. Six months later, I landed my first wedding cake client. The instructors are incredibly patient and genuinely care about your progress.',name:'Amanda K.',role:'Cake Foundations Graduate, 2024'},
+      {text:'The Masterclass was transformative. I left with a portfolio, a business plan, and the confidence to open my own cake studio. Best investment I\'ve ever made.',name:'James T.',role:'Masterclass Graduate, 2024'},
+      {text:'I took the Artistic Cake Design course as a hobby baker. The sugar flower module alone was worth the price. My family couldn\'t believe I made the cake for my daughter\'s birthday!',name:'Priya M.',role:'Artistic Design Graduate, 2024'}
+    ]
+  };
+}
+
+function loadData() {
+  const stored = localStorage.getItem('cakeStoryData');
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      data = deepMerge(loadDefaults(), parsed);
+    } catch(e) {
+      data = loadDefaults();
+    }
+  } else {
+    data = loadDefaults();
+  }
+}
+
+function deepMerge(target, source) {
+  const output = JSON.parse(JSON.stringify(target));
+  for (const key of Object.keys(source)) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) && output[key] && typeof output[key] === 'object' && !Array.isArray(output[key])) {
+      output[key] = deepMerge(output[key], source[key]);
+    } else {
+      output[key] = source[key];
+    }
+  }
+  return output;
+}
+
+function unlock() {
+  const pass = document.getElementById('passcode').value;
+  if (pass === PASSCODE) {
+    document.getElementById('lockScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    loadData();
+    renderTab(activeTab);
+    document.getElementById('passcode').value = '';
+    document.getElementById('lockErr').style.display = 'none';
+  } else {
+    document.getElementById('lockErr').style.display = 'block';
+  }
+}
+
+function lockScreen() {
+  document.getElementById('lockScreen').classList.remove('hidden');
+  document.getElementById('adminPanel').classList.add('hidden');
+  localStorage.setItem('cakeStory_adminLocked', '1');
+}
+
+document.getElementById('passcode').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') unlock();
+});
+
+window.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('cakeStory_adminLocked') === '1') {
+    lockScreen();
+  }
+});
+
+document.getElementById('tabs').addEventListener('click', function(e) {
+  if (e.target.classList.contains('tab')) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    activeTab = e.target.dataset.tab;
+    renderTab(activeTab);
+    window.scrollTo(0, 0);
+  }
+});
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function saveAll() {
+  if (!data) return;
+  readFormData(activeTab);
+  const diff = {};
+  collectDiff(data, loadDefaults(), diff);
+  localStorage.setItem('cakeStoryData', JSON.stringify(diff));
+  const btn = document.getElementById('floatingSave');
+  btn.textContent = 'Saved!';
+  btn.classList.add('saved');
+  setTimeout(() => { btn.textContent = 'Save Changes'; btn.classList.remove('saved'); }, 1800);
+  toast('Saved! Main site will update.');
+}
+
+function collectDiff(current, defaults, output) {
+  for (const key of Object.keys(current)) {
+    if (Array.isArray(current[key])) {
+      const arrDiff = [];
+      let hasChange = false;
+      for (let i = 0; i < current[key].length; i++) {
+        if (typeof current[key][i] === 'object') {
+          const itemDiff = {};
+          collectDiff(current[key][i], (defaults[key] && defaults[key][i]) || {}, itemDiff);
+          if (Object.keys(itemDiff).length > 0) { arrDiff[i] = itemDiff; hasChange = true; }
+        } else if (current[key][i] !== ((defaults[key] && defaults[key][i] !== undefined) ? defaults[key][i] : '')) {
+          if (!arrDiff[i]) arrDiff[i] = {};
+          if (!arrDiff[i]._v) arrDiff[i] = current[key][i];
+          hasChange = true;
+        }
+      }
+      if (hasChange) output[key] = arrDiff;
+    } else if (typeof current[key] === 'object' && current[key] !== null) {
+      const subDiff = {};
+      collectDiff(current[key], defaults[key] || {}, subDiff);
+      if (Object.keys(subDiff).length > 0) output[key] = subDiff;
+    } else if (current[key] !== defaults[key]) {
+      output[key] = current[key];
+    }
+  }
+}
+
+function readFormData(tab) {
+  if (tab === 'hero') {
+    data.hero.title = document.getElementById('f_hero_title').value;
+    data.hero.badge = document.getElementById('f_hero_badge').value;
+    data.hero.description = document.getElementById('f_hero_desc').value;
+    data.hero.image = document.getElementById('f_hero_image').value;
+    data.about.title = document.getElementById('f_about_title').value;
+    data.about.body = document.getElementById('f_about_body').value;
+    data.about.body2 = document.getElementById('f_about_body2').value;
+    data.about.image = document.getElementById('f_about_image').value;
+    data.about.stat1 = document.getElementById('f_stat1').value;
+    data.about.stat1Label = document.getElementById('f_stat1l').value;
+    data.about.stat2 = document.getElementById('f_stat2').value;
+    data.about.stat2Label = document.getElementById('f_stat2l').value;
+    data.about.stat3 = document.getElementById('f_stat3').value;
+    data.about.stat3Label = document.getElementById('f_stat3l').value;
+  } else if (tab === 'courses') {
+    data.courses.forEach((c, i) => {
+      c.name = document.getElementById('fc_name' + i).value;
+      c.level = document.getElementById('fc_level' + i).value;
+      c.description = document.getElementById('fc_desc' + i).value;
+      c.price = document.getElementById('fc_price' + i).value;
+      c.duration = document.getElementById('fc_dur' + i).value;
+      c.sessions = document.getElementById('fc_sess' + i).value;
+      c.image = document.getElementById('fc_img' + i).value;
+    });
+  } else if (tab === 'gallery') {
+    data.gallery.forEach((g, i) => {
+      data.gallery[i] = document.getElementById('fg_img' + i).value;
+    });
+  } else if (tab === 'pricing') {
+    data.pricing.forEach((p, i) => {
+      p.name = document.getElementById('fp_name' + i).value;
+      p.price = document.getElementById('fp_price' + i).value;
+      p.period = document.getElementById('fp_period' + i).value;
+      const featEls = document.querySelectorAll('[data-pricing=' + i + '] .feature-row input');
+      p.features = Array.from(featEls).map(el => el.value).filter(v => v.trim());
+    });
+  } else if (tab === 'instructors') {
+    data.instructors.forEach((ins, i) => {
+      ins.name = document.getElementById('fi_name' + i).value;
+      ins.role = document.getElementById('fi_role' + i).value;
+      ins.bio = document.getElementById('fi_bio' + i).value;
+      ins.image = document.getElementById('fi_img' + i).value;
+    });
+  } else if (tab === 'contact') {
+    data.contact.address = document.getElementById('fc_addr').value;
+    data.contact.phone = document.getElementById('fc_phone').value;
+    data.contact.email = document.getElementById('fc_email').value;
+    data.contact.hours = document.getElementById('fc_hours').value;
+  }
+}
+
+function renderTab(tab) {
+  readFormData(activeTab);
+  const c = document.getElementById('tabContent');
+  switch(tab) {
+    case 'hero': c.innerHTML = renderHero(); break;
+    case 'courses': c.innerHTML = renderCourses(); break;
+    case 'gallery': c.innerHTML = renderGallery(); break;
+    case 'pricing': c.innerHTML = renderPricing(); break;
+    case 'instructors': c.innerHTML = renderInstructors(); break;
+    case 'contact': c.innerHTML = renderContact(); break;
+  }
+}
+
+function renderHero() {
+  const h = data.hero, a = data.about;
+  return `
+  <div class="card"><div class="card-title">Hero Section</div>
+    <label>Brand Name</label><input id="f_hero_brand" value="${esc(h.brand)}" disabled>
+    <label>Badge</label><input id="f_hero_badge" value="${esc(h.badge)}">
+    <label>Title <span class="required">(HTML allowed)</span></label><input id="f_hero_title" value="${esc(h.title)}">
+    <label>Description</label><textarea id="f_hero_desc">${esc(h.description)}</textarea>
+    <label>Hero Image URL</label><div class="img-url-row"><input id="f_hero_image" value="${esc(h.image)}"><button onclick="previewImg('f_hero_image','preview_hero')">Preview</button></div>
+    ${previewHTML('preview_hero', h.image)}
+  </div>
+  <div class="card"><div class="card-title">About Section</div>
+    <label>About Title</label><input id="f_about_title" value="${esc(a.title)}">
+    <label>About Body 1 <span class="required">(HTML allowed)</span></label><textarea id="f_about_body">${esc(a.body)}</textarea>
+    <label>About Body 2</label><textarea id="f_about_body2">${esc(a.body2)}</textarea>
+    <label>About Image URL</label><div class="img-url-row"><input id="f_about_image" value="${esc(a.image)}"><button onclick="previewImg('f_about_image','preview_about')">Preview</button></div>
+    ${previewHTML('preview_about', a.image)}
+    <label>Stats</label>
+    <div class="inline-group">
+      <div><label>Stat 1 Number</label><input id="f_stat1" value="${esc(a.stat1)}"></div>
+      <div><label>Stat 1 Label</label><input id="f_stat1l" value="${esc(a.stat1Label)}"></div>
+    </div>
+    <div class="inline-group">
+      <div><label>Stat 2 Number</label><input id="f_stat2" value="${esc(a.stat2)}"></div>
+      <div><label>Stat 2 Label</label><input id="f_stat2l" value="${esc(a.stat2Label)}"></div>
+    </div>
+    <div class="inline-group">
+      <div><label>Stat 3 Number</label><input id="f_stat3" value="${esc(a.stat3)}"></div>
+      <div><label>Stat 3 Label</label><input id="f_stat3l" value="${esc(a.stat3Label)}"></div>
+    </div>
+  </div>`;
+}
+
+function renderCourses() {
+  return data.courses.map((c, i) => `
+    <div class="card">
+      <div class="card-title">Course ${i+1}</div>
+      <label>Course Name</label><input id="fc_name${i}" value="${esc(c.name)}">
+      <label>Level</label><select id="fc_level${i}">
+        <option ${c.level==='Beginner'?'selected':''}>Beginner</option>
+        <option ${c.level==='Intermediate'?'selected':''}>Intermediate</option>
+        <option ${c.level==='Advanced'?'selected':''}>Advanced</option>
+      </select>
+      <label>Description</label><textarea id="fc_desc${i}">${esc(c.description)}</textarea>
+      <div class="inline-group">
+        <div><label>Price</label><input id="fc_price${i}" value="${esc(c.price)}" placeholder="$450"></div>
+        <div><label>Duration</label><input id="fc_dur${i}" value="${esc(c.duration)}" placeholder="6 Weeks"></div>
+      </div>
+      <div class="inline-group">
+        <div><label>Sessions</label><input id="fc_sess${i}" value="${esc(c.sessions)}" placeholder="12 Sessions"></div>
+      </div>
+      <label>Course Image URL</label><div class="img-url-row"><input id="fc_img${i}" value="${esc(c.image||'')}" placeholder="https://..."><button onclick="previewImg('fc_img${i}','preview_c${i}')">Preview</button></div>
+      ${previewHTML('preview_c'+i, c.image||'')}
+    </div>
+  `).join('');
+}
+
+function renderGallery() {
+  return data.gallery.map((g, i) => `
+    <div class="card">
+      <div class="card-title">Gallery Image ${i+1}</div>
+      <label>Image URL</label>
+      <div class="img-url-row"><input id="fg_img${i}" value="${esc(g||'')}" placeholder="https://..."><button onclick="previewImg('fg_img${i}','preview_g${i}')">Preview</button></div>
+      ${previewHTML('preview_g'+i, g||'')}
+    </div>
+  `).join('');
+}
+
+function renderPricing() {
+  return data.pricing.map((p, i) => `
+    <div class="card" data-pricing="${i}">
+      <div class="card-title">${p.featured ? '⭐ Featured: ' : ''}${esc(p.name)} Plan</div>
+      <label>Plan Name</label><input id="fp_name${i}" value="${esc(p.name)}">
+      <div class="inline-group">
+        <div><label>Price</label><input id="fp_price${i}" value="${esc(p.price)}"></div>
+        <div><label>Period</label><input id="fp_period${i}" value="${esc(p.period)}"></div>
+      </div>
+      <label>Features</label>
+      <div id="features${i}">
+        ${(p.features||[]).map((f, j) => `
+          <div class="feature-row">
+            <input value="${esc(f)}" placeholder="Feature ${j+1}">
+            <button class="del" onclick="this.parentElement.remove()" title="Remove">×</button>
+          </div>
+        `).join('')}
+      </div>
+      <button class="add-btn" onclick="addFeature(${i})">+ Add Feature</button>
+    </div>
+  `).join('');
+}
+
+function addFeature(idx) {
+  const container = document.getElementById('features' + idx);
+  const row = document.createElement('div');
+  row.className = 'feature-row';
+  row.innerHTML = `<input value="" placeholder="New feature"><button class="del" onclick="this.parentElement.remove()" title="Remove">×</button>`;
+  container.appendChild(row);
+}
+
+function renderInstructors() {
+  return data.instructors.map((ins, i) => `
+    <div class="card">
+      <div class="card-title">Instructor ${i+1}</div>
+      <label>Name</label><input id="fi_name${i}" value="${esc(ins.name)}">
+      <label>Role</label><input id="fi_role${i}" value="${esc(ins.role)}">
+      <label>Bio</label><textarea id="fi_bio${i}">${esc(ins.bio)}</textarea>
+      <label>Photo URL</label><div class="img-url-row"><input id="fi_img${i}" value="${esc(ins.image||'')}" placeholder="https://..."><button onclick="previewImg('fi_img${i}','preview_i${i}')">Preview</button></div>
+      ${previewHTML('preview_i'+i, ins.image||'')}
+    </div>
+  `).join('');
+}
+
+function renderContact() {
+  const c = data.contact;
+  return `
+  <div class="card"><div class="card-title">Contact Info</div>
+    <label>Address <span class="required">(HTML allowed for line breaks)</span></label><textarea id="fc_addr">${esc(c.address)}</textarea>
+    <label>Phone</label><input id="fc_phone" value="${esc(c.phone)}">
+    <label>Email</label><input id="fc_email" value="${esc(c.email)}">
+    <label>Hours <span class="required">(HTML allowed)</span></label><textarea id="fc_hours">${esc(c.hours)}</textarea>
+  </div>`;
+}
+
+function previewImg(inputId, previewId) {
+  const url = document.getElementById(inputId).value.trim();
+  const preview = document.getElementById(previewId);
+  if (!preview) return;
+  if (url) {
+    preview.innerHTML = `<img src="${esc(url)}" class="preview-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-preview\\'>Image not found</div>'">`;
+  } else {
+    preview.innerHTML = '';
+  }
+}
+
+function previewHTML(id, url) {
+  if (url) {
+    return `<div id="${id}"><img src="${esc(url)}" class="preview-thumb" onerror="this.parentElement.innerHTML='<div class=\\'no-preview\\'>Image not found</div>'"></div>`;
+  }
+  return `<div id="${id}"></div>`;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+</script>
+</body>
+</html>

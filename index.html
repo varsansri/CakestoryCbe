@@ -763,6 +763,172 @@
   <!-- ============================================================
        SCRIPTS
        ============================================================ -->
+  <script>
+(function() {
+  var defaults = {
+    hero: {
+      brand: 'CakeStory - Cbe',
+      badge: 'Award-Winning Cake School',
+      title: 'Master the <em>Art</em> of Cake Crafting',
+      description: 'From buttercream basics to advanced sugar flowers — learn from industry professionals in our state-of-the-art teaching studio. Your journey to becoming a cake artist starts here.',
+      image: 'images/hero-bg.jpg'
+    },
+    about: {
+      label: 'About Us',
+      title: 'Where Passion Meets Profession',
+      body: 'Founded in 2018, <strong>CakestoryCbe Studio</strong> has trained over 1,200 students in the fine art of cake decoration. Whether you\'re a complete beginner or a seasoned baker looking to refine your skills, our hands-on curriculum meets you where you are.',
+      body2: 'We believe cake decorating is equal parts science and creativity. Our instructors bring decades of combined industry experience — from Michelin-starred pastry kitchens to winning international competitions. Every class is limited to <strong>8 students</strong> so you get the attention you deserve.',
+      image: 'images/about.png',
+      stat1: '1,200+',
+      stat1Label: 'Students Trained',
+      stat2: '50+',
+      stat2Label: 'Course Modules',
+      stat3: '98%',
+      stat3Label: 'Satisfaction Rate'
+    },
+    courses: [
+      {name:'Cake Foundations',level:'Beginner',description:'Master the essentials — sponge baking, buttercream smoothing, piping basics, and simple fondant work. No experience needed.',price:'$450',duration:'6 Weeks',sessions:'12 Sessions',image:''},
+      {name:'Artistic Cake Design',level:'Intermediate',description:'Dive into advanced piping, sugar flowers, hand-painting, tiered construction, and modern drip-cake techniques.',price:'$750',duration:'8 Weeks',sessions:'16 Sessions',image:''},
+      {name:'Professional Masterclass',level:'Advanced',description:'Wedding cakes, sculpted cakes, sugar artistry, and business skills for launching your own cake studio.',price:'$1,200',duration:'12 Weeks',sessions:'24 Sessions',image:''}
+    ],
+    gallery: ['','','','','',''],
+    pricing: [
+      {name:'Starter',price:'$450',period:'6-week course',features:['Cake Foundations curriculum','12 hands-on sessions','All materials included','Take-home recipe book','Certificate of completion'],featured:false,icon:'🍰'},
+      {name:'Artisan',price:'$750',period:'8-week course',features:['Everything in Starter, plus:','Advanced piping & sugar flowers','Tiered cake construction','Hand-painting techniques','Professional tool kit included','Portfolio photoshoot session'],featured:true,icon:'⭐'},
+      {name:'Master',price:'$1,200',period:'12-week course',features:['Everything in Artisan, plus:','Wedding cake specialization','Sculpted & novelty cakes','Business launch coaching','Lifetime alumni community','Job placement assistance'],featured:false,icon:'🌟'}
+    ],
+    instructors: [
+      {name:'Sarah Mitchell',role:'Head Pastry Instructor',bio:'Former executive pastry chef at The Ritz. 15+ years of experience in fine pastry and cake artistry.',image:''},
+      {name:'David Chen',role:'Sugar Art Specialist',bio:'International sugar-craft competition winner. Known for his breathtaking hand-crafted sugar flowers.',image:''},
+      {name:'Elena Rodriguez',role:'Wedding Cake Designer',bio:'Designed cakes for 300+ weddings. Specializes in multi-tier structures and delicate piping work.',image:''},
+      {name:'Marcus Okonkwo',role:'Business & Branding Coach',bio:'Helps students turn their passion into a profitable cake business. Built his own bakery from the ground up.',image:''}
+    ],
+    contact: {address:'742 Sweet Avenue, Suite 101<br>Portland, OR 97201',phone:'(503) 555-0147',email:'hello@cakestorycbe.com',hours:'Mon – Fri: 9:00 AM – 7:00 PM<br>Saturday: 10:00 AM – 4:00 PM<br>Sunday: Closed'}
+  };
+
+  function deepMerge(target, source) {
+    var output = JSON.parse(JSON.stringify(target));
+    for (var key in source) {
+      if (source.hasOwnProperty(key)) {
+        if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key]) && output[key] && typeof output[key] === 'object' && !Array.isArray(output[key])) {
+          output[key] = deepMerge(output[key], source[key]);
+        } else {
+          output[key] = source[key];
+        }
+      }
+    }
+    return output;
+  }
+
+  var stored = localStorage.getItem('cakeStoryData');
+  var data = stored ? deepMerge(defaults, JSON.parse(stored)) : defaults;
+
+  function h(s) { return s || ''; }
+
+  // Hero
+  var heroTitle = document.querySelector('.hero__title');
+  if (heroTitle) heroTitle.innerHTML = data.hero.title;
+  var heroBadge = document.querySelector('.hero__badge');
+  if (heroBadge) heroBadge.textContent = data.hero.badge;
+  var heroDesc = document.querySelector('.hero__description');
+  if (heroDesc) heroDesc.textContent = data.hero.description;
+  var heroImg = document.querySelector('.hero__img');
+  if (heroImg && data.hero.image) heroImg.src = data.hero.image;
+
+  // About
+  var aboutTitle = document.querySelector('#about .section-title');
+  if (aboutTitle) aboutTitle.textContent = data.about.title;
+  var aboutPs = document.querySelectorAll('#about .about__content p');
+  if (aboutPs[0]) aboutPs[0].innerHTML = data.about.body;
+  if (aboutPs[1]) aboutPs[1].innerHTML = data.about.body2;
+  var aboutImg = document.querySelector('.about__img');
+  if (aboutImg && data.about.image) aboutImg.src = data.about.image;
+  var stats = document.querySelectorAll('#about .stat__number');
+  if (stats[0]) stats[0].textContent = data.about.stat1;
+  if (stats[1]) stats[1].textContent = data.about.stat2;
+  if (stats[2]) stats[2].textContent = data.about.stat3;
+  var statLabels = document.querySelectorAll('#about .stat__label');
+  if (statLabels[0]) statLabels[0].textContent = data.about.stat1Label;
+  if (statLabels[1]) statLabels[1].textContent = data.about.stat2Label;
+  if (statLabels[2]) statLabels[2].textContent = data.about.stat3Label;
+
+  // Courses
+  var courseCards = document.querySelectorAll('#courses .course-card');
+  data.courses.forEach(function(c, i) {
+    var card = courseCards[i];
+    if (!card) return;
+    var titleEl = card.querySelector('.course-card__title');
+    if (titleEl) titleEl.textContent = c.name;
+    var levelEl = card.querySelector('.course-card__level');
+    if (levelEl) levelEl.textContent = c.level;
+    var descEl = card.querySelector('.course-card__desc');
+    if (descEl) descEl.textContent = c.description;
+    var metaSpans = card.querySelectorAll('.course-card__meta span');
+    if (metaSpans[0]) metaSpans[0].innerHTML = '&#9200; ' + c.duration;
+    if (metaSpans[1]) metaSpans[1].innerHTML = '&#128221; ' + c.sessions;
+    if (metaSpans[2]) metaSpans[2].innerHTML = '&#128176; ' + c.price;
+    if (c.image) {
+      var imgWrap = card.querySelector('.course-card__image');
+      if (imgWrap) {
+        imgWrap.innerHTML = '<img src="' + c.image + '" alt="' + c.name + '" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-md)">';
+      }
+    }
+  });
+
+  // Gallery
+  var galleryItems = document.querySelectorAll('#gallery .gallery__item');
+  data.gallery.forEach(function(g, i) {
+    var item = galleryItems ? galleryItems[i] : null;
+    if (!item || !g) return;
+    item.innerHTML = '<img src="' + g + '" alt="Gallery ' + (i+1) + '" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-md)">';
+  });
+
+  // Pricing
+  var pricingCards = document.querySelectorAll('#pricing .pricing-card');
+  data.pricing.forEach(function(p, i) {
+    var card = pricingCards[i];
+    if (!card) return;
+    var titleEl = card.querySelector('.pricing-card__title');
+    if (titleEl) titleEl.textContent = p.name;
+    var priceEl = card.querySelector('.pricing-card__price');
+    if (priceEl) priceEl.textContent = p.price;
+    var periodEl = card.querySelector('.pricing-card__period');
+    if (periodEl) periodEl.textContent = p.period;
+    var iconEl = card.querySelector('.pricing-card__icon');
+    if (iconEl && p.icon) iconEl.textContent = p.icon;
+    var featList = card.querySelector('.pricing-card__features');
+    if (featList && p.features) {
+      featList.innerHTML = p.features.map(function(f) { return '<li>' + f + '</li>'; }).join('');
+    }
+  });
+
+  // Instructors
+  var instructorCards = document.querySelectorAll('#instructors .instructor-card');
+  data.instructors.forEach(function(ins, i) {
+    var card = instructorCards[i];
+    if (!card) return;
+    var nameEl = card.querySelector('.instructor-card__name');
+    if (nameEl) nameEl.textContent = ins.name;
+    var roleEl = card.querySelector('.instructor-card__role');
+    if (roleEl) roleEl.textContent = ins.role;
+    var bioEl = card.querySelector('.instructor-card__bio');
+    if (bioEl) bioEl.textContent = ins.bio;
+    if (ins.image) {
+      var imgEl = card.querySelector('.instructor-card__image');
+      if (imgEl) {
+        imgEl.innerHTML = '<img src="' + ins.image + '" alt="' + ins.name + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+      }
+    }
+  });
+
+  // Contact
+  var contactValues = document.querySelectorAll('#contact .contact__info-value');
+  if (contactValues[0]) contactValues[0].innerHTML = data.contact.address;
+  if (contactValues[1]) contactValues[1].textContent = data.contact.phone;
+  if (contactValues[2]) contactValues[2].textContent = data.contact.email;
+  if (contactValues[3]) contactValues[3].innerHTML = data.contact.hours;
+})();
+  </script>
   <script src="js/main.js"></script>
 </body>
 </html>
